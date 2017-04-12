@@ -1,262 +1,344 @@
-ScrollComponent
+# ScrollComponent
 
-A ScrollComponent is used to scroll content. It implements momentum and spring physics, allows for customization, and emits different events.
+`ScrollComponent`用来滚动内容，它支持自定义动量和物理弹性曲线，并发射不同事件。
+>A ScrollComponent is used to scroll content. It implements momentum and spring physics, allows for customization, and emits different events.
 
-The ScrollComponent is built with two layers. The ScrollComponent itself is a layer that masks its content. It has a content layer that has draggable enabled and constraints configured. It automatically manages the size of the content layer based on the total size of the sub layers of the content layer.
+`ScrollComponent`由两个图层组成，它本身的遮罩图层和内容图层，内容图层能够拖拽和约束。它能够基于内容层中所有子层的总大小自动调整内容层的大小。
+>The ScrollComponent is built with two layers. The ScrollComponent itself is a layer that masks its content. It has a content layer that has draggable enabled and constraints configured. It automatically manages the size of the content layer based on the total size of the sub layers of the content layer.
 
-# Create a new ScrollComponent 
-scroll = new ScrollComponent
-    width: 100
-    height: 100
+```coffeescript
+     # Create a new ScrollComponent 
+    scroll = new ScrollComponent
+      width: 100
+      height: 100
  
-# Include a Layer 
-layerA = new Layer
-    parent: scroll.content
+    # Include a Layer 
+    layerA = new Layer
+        parent: scroll.content
+```
 
-You can also wrap an existing layer within a ScrollComponent, using ScrollComponent.wrap(). The ScrollComponent will insert itself in-between the content and its super layer. This is useful when you've imported designs from Sketch or Photoshop and want to make a layer scrollable. You can learn more about wrapping in the learn section.
+你也可以使用`ScrollComponent.wrap()`包裹一个已有图层，`ScrollComponent`将自己插入到内容与其父层之间。当你从Sketch或Photoshop导入设计并希望使图层滚动时，这会很有帮助。你可以在本章节了解更多有关于包裹图层的信息。
+>You can also wrap an existing layer within a ScrollComponent, using ScrollComponent.wrap(). The ScrollComponent will insert itself in-between the content and its super layer. This is useful when you've imported designs from Sketch or Photoshop and want to make a layer scrollable. You can learn more about wrapping in the learn section.
 
-layerA = new Layer
-    width: 300
-    height: 300
+```coffeescript
+
+    layerA = new Layer
+        width: 300
+        height: 300
  
-scroll = ScrollComponent.wrap(layerA)
+    scroll = ScrollComponent.wrap(layerA)
+```
+<a id="scroll.content"></a>
+## scroll.content(layer)
 
-scroll.content <layer>
+导入内容的图层，要添加内容，先创建图层并把它的父级设置为`scroll.content`。当内容图层尺寸超过`ScrollComponent`时，将会被裁切。
+>The layer to add content to. To add content, create a new Layer and set its parent to the scroll.content layer. When the content doesn't fit the ScrollComponent it will be clipped.
 
-The layer to add content to. To add content, create a new Layer and set its parent to the scroll.content layer. When the content doesn't fit the ScrollComponent it will be clipped.
-
-scroll = new ScrollComponent
-    width: 100
-    height: 100
+```coffeescript
+    scroll = new ScrollComponent
+      width: 100
+      height: 100
  
-layerA = new Layer
-    parent: scroll.content
-    image: "images/bg.png"
-    width: 100
-    height: 200
+    layerA = new Layer
+        parent: scroll.content
+        image: "images/bg.png"
+        width: 100
+        height: 200
+```
 
-scroll.contentInset <object>
+<a id="scroll.contentInset"></a>
+## scroll.contentInset(对象)
 
-Inset for the content. This will give your content extra padding between the constraints and the actual content layers.
+内容区域缩进。将会在实际图层和约束区域内添加额外的填充空间。
+>Inset for the content. This will give your content extra padding between the constraints and the actual content layers.
 
-scroll = new ScrollComponent
-    width: 100
-    height: 100
+```coffeescript
+    scroll = new ScrollComponent
+        width: 100
+        height: 100
  
-layerA = new Layer
-    parent: scroll.content
-    image: "images/bg.png"
-    width: 100
-    height: 200
- 
-scroll.contentInset =
-    top: 20
-    right: 0
-    bottom: 20
-    left: 0
+    layerA = new Layer
+        parent: scroll.content
+        image: "images/bg.png"
+        width: 100
+        height: 200
 
-scroll.speedX <number>
+    scroll.contentInset =
+        top: 20
+        right: 0
+        bottom: 20
+        left: 0
+```
 
-Horizontal scrolling speed, number between 0 and 1. Default value is 1.
+<a id="scroll.speedX"></a>
+## scroll.speedX(数字)
 
-scroll = new ScrollComponent
- 
-layerA = new Layer
-    parent: scroll.content 
- 
-scroll.speedX = 0.5
+改变水平方向滚动速度，其值是一个0到1的数字，默认为1。
+>Horizontal scrolling speed, number between 0 and 1. Default value is 1.
 
-scroll.speedY <number>
+```coffeescript
+    scroll = new ScrollComponent
 
-Vertical scrolling speed, number between 0 and 1. Default value is 1.
+    layerA = new Layer
+        parent: scroll.content 
 
-scroll = new ScrollComponent
- 
-layerA = new Layer
-    parent: scroll.content 
- 
-scroll.speedY = 0.5
+    scroll.speedX = 0.5
+```
 
-scroll.scroll <boolean>
+<a id="scroll.speedY"></a>
+## scroll.speedY(数字)
 
-Enable or disable scrolling. Enabled by default. If you set this to false, it will set both scrollVertical and scrollHorizontal to false.
+改变垂直方向滚动速度，其值是一个0到1的数字，默认为1。
+>Vertical scrolling speed, number between 0 and 1. Default value is 1.
 
-scroll = new ScrollComponent
- 
-layerA = new Layer
-    parent: scroll.content
- 
-scroll.scroll = false
+```coffeescript
+    scroll = new ScrollComponent
 
-scroll.scrollHorizontal <boolean>
+    layerA = new Layer
+        parent: scroll.content 
 
-Enable or disable horizontal scrolling.
+    scroll.speedY = 0.5
+```
+<a id="scroll.scroll"></a>
+## scroll.scroll(布尔值)
 
-scroll = new ScrollComponent
- 
-layerA = new Layer
-    parent: scroll.content
- 
-scroll.scrollHorizontal = false
+启用或禁用滚动，默认启用。禁用状态将会同时禁用水平方向和垂直方向。
+>Enable or disable scrolling. Enabled by default. If you set this to false, it will set both scrollVertical and scrollHorizontal to false.
 
-scroll.scrollVertical <boolean>
+```coffeescript
+    scroll = new ScrollComponent
 
-Enable or disable vertical scrolling.
+    layerA = new Layer
+        parent: scroll.content
 
-scroll = new ScrollComponent
- 
-layerA = new Layer
-    parent: scroll.content
- 
-scroll.scrollVertical = false
+    scroll.scroll = false
+```
 
-scroll.scrollX <number>
+<a id="scroll.scrollHorizontal"></a>
+## scroll.scrollHorizontal(布尔值)
 
-Horizontal scroll location.
+启用或禁用水平方向滚动
+>Enable or disable horizontal scrolling.
 
-scroll = new ScrollComponent
- 
-layerA = new Layer
-    parent: scroll.content
- 
-scroll.scrollX = 250
+```coffeescript
+    scroll = new ScrollComponent
 
-scroll.scrollY <number>
+    layerA = new Layer
+        parent: scroll.content
 
-Vertical scroll location.
+    scroll.scrollHorizontal = false
+```
 
-scroll = new ScrollComponent
- 
-layerA = new Layer
-    parent: scroll.content 
- 
-scroll.scrollY = 250
+<a id="scroll.scrollVertical"></a>
+## scroll.scrollVertical(布尔值)
 
-scroll.scrollPoint <object>
+启用或禁用垂直方向滚动
+>Enable or disable vertical scrolling.
 
-Define the scroll location with x and y properties.
+```coffeescript
+    scroll = new ScrollComponent
 
-scroll = new ScrollComponent
- 
-layerA = new Layer
-    parent: scroll.content
- 
-scroll.scrollPoint =
-    x: 0
-    y: 50
+    layerA = new Layer
+        parent: scroll.content
 
-scroll.scrollFrame <object>
+    scroll.scrollVertical = false
+```
 
-Visible scroll frame.
+<a id="scroll.scrollX"></a>
+## scroll.scrollX(数字)
 
-scroll = new ScrollComponent
- 
-layerA = new Layer
-    parent: scroll.content
- 
-scroll.scrollFrame =
-    x: 0
-    y: 250
-    width: 250
-    height: 250
+水平滚动坐标
+>Horizontal scroll location.
 
-scroll.velocity <number>
+```coffeescript
+    scroll = new ScrollComponent
 
-Current scroll speed and direction in pixels per second at this current time.
+    layerA = new Layer
+        parent: scroll.content
 
-scroll = new ScrollComponent
- 
-# On scroll, print the velocity 
-scroll.on Events.Scroll, ->
-    print scroll.velocity
+    scroll.scrollX = 250
+```
+<a id="scroll.scrollY"></a>
+## scroll.scrollY(数字)
 
-scroll.direction <string>
+垂直滚动坐标
+>Vertical scroll location.
 
-Current scrolling direction. Returns "up", "down", "left", or "right". The scrolling direction is the inverse of the direction of the drag action: when dragging downwards, you're effectively scrolling upwards. (Read-only)
+```coffeescript
+    scroll = new ScrollComponent
 
-scroll = new ScrollComponent
- 
-# On scroll, print the direction 
-scroll.on Events.Scroll, ->
-    print scroll.direction
+    layerA = new Layer
+        parent: scroll.content 
 
-scroll.directionLock <boolean>
+    scroll.scrollY = 250
+```
 
+<a id="scroll.scrollPoint"></a>
+## scroll.scrollPoint(对象)
+
+使用x和y数值来定义滚动坐标
+>Define the scroll location with x and y properties.
+
+```coffeescript
+    scroll = new ScrollComponent
+
+    layerA = new Layer
+        parent: scroll.content
+
+    scroll.scrollPoint =
+        x: 0
+        y: 50
+```
+
+<a id="scroll.scrollFrame"></a>
+## scroll.scrollFrame(对象)
+
+可见滚动框
+>Visible scroll frame.
+
+```coffeescript
+    scroll = new ScrollComponent
+
+    layerA = new Layer
+        parent: scroll.content
+
+    scroll.scrollFrame =
+        x: 0
+        y: 250
+        width: 250
+        height: 250
+```
+
+<a id="scroll.velocity"></a>
+## scroll.velocity(数字)
+
+当前滚动速度和方向（以每秒像素为单位）
+>Current scroll speed and direction in pixels per second at this current time.
+
+```coffeescript
+    scroll = new ScrollComponent
+
+    # On scroll, print the velocity 
+    scroll.on Events.Scroll, ->
+        print scroll.velocity
+```
+
+<a id="scroll.direction"></a>
+## scroll.direction(字符串)
+
+当前滚动方向，会返回"up", "down", "left" 或 "right"中的一个。滚动方向与拖动方向相反：当向下拖动时，实际上向上滚动。（只读）
+>Current scrolling direction. Returns "up", "down", "left", or "right". The scrolling direction is the inverse of the direction of the drag action: when dragging downwards, you're effectively scrolling upwards. (Read-only)
+
+```coffeescript
+    scroll = new ScrollComponent
+
+    # On scroll, print the direction 
+    scroll.on Events.Scroll, ->
+        print scroll.direction
+```
+
+<a id="scroll.directionLock"></a>
+## scroll.directionLock(布尔值)
+
+在滚动距离超过某一上限之后，限定你只能在垂直和水平中的一个方向进行滚动。
 Snap to horizontal/vertical direction after a certain threshold.
 
-scroll = new ScrollComponent
- 
-# Allow dragging only in one direction at a time 
-scroll.directionLock = true
+```coffeescript
+    scroll = new ScrollComponent
 
-scroll.directionLockThreshold <object>
+    # Allow dragging only in one direction at a time 
+    scroll.directionLock = true
+```
 
+<a id="scroll.directionLockThreshold"></a>
+## scroll.directionLockThreshold(对象)
+
+锁定方向的上限。x和y的值代表在它锁定方向之前你可以在两个方向上滚动的距离。
 The thresholds for lock directions. The x and y values represent the distance you can drag in a certain direction before it starts locking.
 
-scroll = new ScrollComponent
- 
-# Snap horizontally after dragging 50px 
-# Snap vertically instantly 
-scroll.directionLock = true
- 
-scroll.directionLockThreshold =
-    x: 50
-    y: 0
+```coffeescript
+    scroll = new ScrollComponent
 
-scroll.angle <number>
+    # Snap horizontally after dragging 50px 
+    # Snap vertically instantly 
+    scroll.directionLock = true
 
-Current scrolling angle (in degrees). The scrolling angle is the inverse of the direction of the drag action: when dragging downwards, you're effectively scrolling upwards. (Read-only)
+    scroll.directionLockThreshold =
+        x: 50
+        y: 0
+```
 
-scroll = new ScrollComponent
- 
-# On scroll, print the angle 
-scroll.on Events.Scroll, ->
-    print scroll.angle
+<a id="scroll.angle"></a>
+## scroll.angle(数字)
 
-scroll.isDragging <boolean>
+当前滚动角度（以度为单位）。滚动角度和拖动角度方向相反：当向下拖动时，实际上向上滚动。（只读）
+>Current scrolling angle (in degrees). The scrolling angle is the inverse of the direction of the drag action: when dragging downwards, you're effectively scrolling upwards. (Read-only)
 
+```coffeescript
+    scroll = new ScrollComponent
+
+    # On scroll, print the angle 
+    scroll.on Events.Scroll, ->
+        print scroll.angle
+```
+
+<a id="scroll.isDragging"></a>
+## scroll.isDragging(布尔值)
+
+判断现在某个图层是否正在滚动（松开后动画时返回的是false），它是只读的。
 Whether the layer is currently being dragged (returns false when animating). (Read-only)
 
-scroll = new ScrollComponent
- 
-# Check if the layer is being dragged 
-scroll.onMove ->
-    print scroll.isDragging
+```coffeescript
+    scroll = new ScrollComponent
 
-scroll.isMoving <boolean>
+    # Check if the layer is being dragged 
+    scroll.onMove ->
+        print scroll.isDragging
+```
 
-Whether the content is currently moving, either by dragging or by a momentum/bounce animation. (Read-only)
+<a id="scroll.isMoving"></a>
+## scroll.isMoving(布尔值)
 
-scroll = new ScrollComponent
- 
-# Check if the layer is moving 
-scroll.onMove ->
-    print scroll.isMoving
+判断当前图层是否在移动，无论是因为拖动移动还是因为模拟动量或弹性动画，它是只读的
+>Whether the content is currently moving, either by dragging or by a momentum/bounce animation. (Read-only)
 
-scroll.closestContentLayer(originX, originY)
+```coffeescript
+    scroll = new ScrollComponent
 
+    # Check if the layer is moving 
+    scroll.onMove ->
+        print scroll.isMoving
+```
+
+<a id="scroll.closestContentLayer"></a>
+## scroll.closestContentLayer(originX, originY)
+
+待翻译
 Get the layer closest to the ScrollComponent, depending on the defined origin. The origin is defined as numbers between 0 and 1, where (0,0) is the top-left corner, (0.5, 0.5) the center, and (1,1) the bottom-right corner.
 
 The default values are (0,0). This means that it calculates the distance from the top-left of the ScrollComponent to the top-left of the content layers.
 
-scroll = new ScrollComponent
- 
-# Create content layers 
-layerA = new Layer
-    parent: scroll.content
-    name: "layerA"
-    x: 0
-    y: 0
- 
-layerB = new Layer
-    parent: scroll.content
-    name: "layerB"
-    x: 50
-    y: 50
- 
-# Get the Layer of which the center point is closest 
-# to the center point of the ScrollComponent 
-print scroll.closestContentLayer(0.5, 0.5)
+```coffeescript
+    scroll = new ScrollComponent
+
+    # Create content layers 
+    layerA = new Layer
+        parent: scroll.content
+        name: "layerA"
+        x: 0
+        y: 0
+
+    layerB = new Layer
+        parent: scroll.content
+        name: "layerB"
+        x: 50
+        y: 50
+
+    # Get the Layer of which the center point is closest 
+    # to the center point of the ScrollComponent 
+    print scroll.closestContentLayer(0.5, 0.5)
+```
+
 
 scroll.closestContentLayerForScrollPoint(originX, originY)
 
